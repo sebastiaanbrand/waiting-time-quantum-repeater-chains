@@ -1,1 +1,1 @@
-# waiting-time-quantum-repeater-chains
+# Waiting time and fidelity in quantum repeater chains
