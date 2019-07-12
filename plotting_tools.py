@@ -7,7 +7,7 @@ import pathlib
 
 
 def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
-                       trunc=None, format='png'):
+                       trunc=None, format='png', verbose=True):
     """Plots distributions.
 
     Parameters
@@ -37,6 +37,9 @@ def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
         level_selection = range(len(data))
     if(trunc is None):
         trunc = len(data[0]) - 1
+
+    if(verbose):
+        print("Plotting {} for n = {}".format(to_plot, list(level_selection)))
 
     # select colors
     default_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']

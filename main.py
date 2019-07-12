@@ -2,161 +2,101 @@ from repeater_chain_analyzer import RepeaterChainCalculator, RepeaterChainSample
 import plotting_tools as plot_tools
 
 
-def generate_data_1a(folder):
-    calculator = RepeaterChainCalculator(n=3, trunc=500, pgen=0.1, pswap=0.5, outputfolder=folder)
-    calculator.calculate()
-
-def generate_data_1b(folder):
-    sampler = RepeaterChainSampler(n=3, pgen=0.1, pswap=0.5, outputfolder=folder)
-    sampler.sample(sample_size=100000)
-
-def generate_data_2a(folder):
-    f0 = 0.95
-    w0 = (4*f0 - 1) / 3
-    calculator = RepeaterChainCalculator(n=2, trunc=100, pgen=0.1, pswap=0.5, w0=w0, T_coh=50, outputfolder=folder)
-    calculator.calculate()
-
-def generate_data_2b(folder):
-    f0 = 0.95
-    w0 = (4*f0 - 1) / 3
-    sampler = RepeaterChainSampler(n=2, pgen=0.1, pswap=0.5, w0=w0, T_coh=50, outputfolder=folder)
-    sampler.sample(sample_size=250000)
-
-def generate_data_3a(folder):
-    f0 = 0.95
-    w0 = (4*f0 - 1) / 3
-    sampler = RepeaterChainSampler(n=2, pgen=0.1, pswap=0.5, w0=w0, T_coh=250, n_dist=1, outputfolder=folder)
-    sampler.sample(sample_size=250000)
-
-def generate_data_3b(folder):
-    f0 = 0.95
-    w0 = (4*f0 - 1) / 3
-    sampler = RepeaterChainSampler(n=2, pgen=0.1, pswap=0.5, w0=w0, T_coh=1000, n_dist=1, outputfolder=folder)
-    sampler.sample(sample_size=250000)
-
-def generate_data_4a(folder):
-    sampler = RepeaterChainSampler(n=4, pgen=0.1, pswap=0.5, comm_time=[1,2,4,8,16], outputfolder=folder)
-    sampler.sample(sample_size=250000)
-
-def generate_data_4b(folder):
-    sampler = RepeaterChainSampler(n=4, pgen=0.9, pswap=0.5, comm_time=[1,2,4,8,16], outputfolder=folder)
-    sampler.sample(sample_size=250000)
-
-def load_and_plot_data_1a(folder):
-    # load data
-    calculator = RepeaterChainCalculator(n=0, trunc=0, pgen=0, pswap=0)
-    calculator.load_from_folder(folder)
-
-    # plot stuff
-    plot_folder = folder + 'plots/'
-    selection = [1,2,3]
-    plot_tools.plot_distributions(plot_folder, rca=calculator, to_plot='pmf', level_selection=selection)
-    plot_tools.plot_distributions(plot_folder, rca=calculator, to_plot='cdf', level_selection=selection)
-
-def load_and_plot_data_1b(folder):
-    # load data
-    sampler = RepeaterChainSampler(n=0, pgen=0, pswap=0)
-    sampler.load_from_folder(folder)
-
-    # plot stuff
-    plot_folder = folder + 'plots/'
-    selection = [1,2,3]
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='pmf', trunc=500, level_selection=selection)
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='cdf', trunc=500, level_selection=selection)
-
-def load_and_plot_data_2a(folder):
-    # load data
-    calculator = RepeaterChainCalculator(n=0, trunc=0, pgen=0, pswap=0)
-    calculator.load_from_folder(folder)
-
-    # plot stuff
-    plot_folder = folder + 'plots/'
-    plot_tools.plot_distributions(plot_folder, rca=calculator, to_plot='pmf')
-    plot_tools.plot_distributions(plot_folder, rca=calculator, to_plot='cdf')
-    plot_tools.plot_distributions(plot_folder, rca=calculator, to_plot='fid')
-    plot_tools.plot_distributions(plot_folder, rca=calculator, to_plot='wern')
-
-def load_and_plot_data_2b(folder):
-    # load data
-    sampler = RepeaterChainSampler(n=0, pgen=0, pswap=0)
-    sampler.load_from_folder(folder)
-
-    # plot stuff
-    plot_folder = folder + 'plots/'
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='pmf', trunc=100)
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='cdf', trunc=100)
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='fid', trunc=100)
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='wern', trunc=100)
-
-def load_and_plot_data_3(folder):
-    # load data
-    sampler = RepeaterChainSampler(n=0, pgen=0, pswap=0)
-    sampler.load_from_folder(folder)
-
-    # plot stuff
-    plot_folder = folder + 'plots/'
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='pmf', trunc=500)
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='cdf', trunc=500)
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='fid', trunc=500)
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='wern', trunc=500)
-
-def load_and_plot_data_4a(folder):
-    # load data
-    sampler = RepeaterChainSampler(n=0, pgen=0, pswap=0)
-    sampler.load_from_folder(folder)
-
-    # plot stuff
-    plot_folder = folder + 'plots/'
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='pmf', trunc=2000, level_selection=[4])
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='cdf', trunc=2000, level_selection=[4])
-
-def load_and_plot_data_4b(folder):
-    # load data
-    sampler = RepeaterChainSampler(n=0, pgen=0, pswap=0)
-    sampler.load_from_folder(folder)
-
-    # plot stuff
-    plot_folder = folder + 'plots/'
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='pmf', trunc=500, level_selection=[4])
-    plot_tools.plot_distributions(plot_folder, rca=sampler, to_plot='cdf', trunc=500, level_selection=[4])
-
 if __name__ == '__main__':
 
-    # Compute and plot distributions for SWAP-ONLY protocol using...
-    # (a) The semi-analytical algorithm
-    folder_1a = 'results/test_1a/'
-    generate_data_1a(folder_1a)
-    load_and_plot_data_1a(folder_1a)
-    # (b) The Monte Carlo algorithm (with the same parameters)
-    folder_1b = 'results/test_1b/'
-    generate_data_1b(folder_1b)
-    load_and_plot_data_1b(folder_1b)
+    # Set parameters for the SWAP-ONLY protocol,
+    # we'll only calculate waiting time for now.
+    pgen  = 0.1
+    pswap = 0.9
+    n     = 3
+    trunc = 100
+
+    # Semi-analytical algorithm
+    calculator = RepeaterChainCalculator(n=n,
+                                         pgen=pgen,
+                                         pswap=pswap,
+                                         trunc=trunc,
+                                         outputfolder='results/example_1/')
+    # Calling the following function will calculate all waiting time PMFs for
+    # the waiting times T_0, T_1, up to T_n, up to Pr(T_n = trunc).
+    # The results are stored in csv files in the given folder.
+    calculator.calculate()
+
+    # After the calculation we can pass the calculator object to the plot
+    # function. However, for this example we'll first load the stored results
+    # from the previous computation.
+    calculator2 = RepeaterChainCalculator(n=0, pgen=0, pswap=0, trunc=0)
+    calculator2.load_from_folder('results/example_1/')
+
+    # We can plot the computed pmfs by calling the plot function and passing
+    # the RepeaterChainCalculator object. We can also select which T_n to put
+    # in the plot. In this example T_2 and T_3 will be plotted.
+    plot_tools.plot_distributions(outputfolder='results/example_1/plots/',
+                                  rca=calculator2,
+                                  to_plot='pmf',
+                                  level_selection=[2,3])
 
 
-    # Compute waiting time and fidelities for SWAP-ONLY protocol using...
-    # (a) The semi-analytical algorithm (~15 min for trunc=100 and n=2)
-    folder_2a = 'results/test_2a/'
-    generate_data_2a(folder_2a)
-    load_and_plot_data_2a(folder_2a)
-    # (b) The Monte Carlo algorithm (with the same parameters)
-    folder_2b = 'results/test_2b/'
-    generate_data_2b(folder_2b)
-    load_and_plot_data_2b(folder_2b)
+    # The Monte Carlo algorithm works very similarly.
+    sampler = RepeaterChainSampler(n=n,
+                                   pgen=pgen,
+                                   pswap=pswap,
+                                   outputfolder='results/example_2/')
+    # One of the differences is that here we don't need to set trunc before
+    # running the algorithm, however it does need to be set for the plots.
+    sampler.sample(sample_size=25000)
 
+    plot_tools.plot_distributions(outputfolder='results/example_2/plots/',
+                                  rca=sampler,
+                                  to_plot='pmf',
+                                  level_selection=[2,3],
+                                  trunc=trunc)
 
-    # Test for Monte Carlo sampling with distillation
-    folder_3a = 'results/test_3a/'
-    folder_3b = 'results/test_3b/'
-    generate_data_3a(folder_3a)
-    generate_data_3b(folder_3b)
-    load_and_plot_data_3(folder_3a)
-    load_and_plot_data_3(folder_3b)
+    # NOTE: uncomment this section for Werner parameter example:
+    """
+    # Fidelity (or strictly the Werner parameters) are automatically calculated
+    # when w0 is set:
+    f0 = 0.95
+    w0 = (4*f0 - 1) / 3
+    T_coh = 10
+    n = 2
+    trunc = 25 # NOTE: the semi-analytical algorithm with fidelity calculation
+               # runs in O(trunc^4), so setting this too high results in long
+               # runtimes
+    calculator = RepeaterChainCalculator(n=n,
+                                         pgen=pgen,
+                                         pswap=pswap,
+                                         trunc=trunc,
+                                         w0=w0,
+                                         T_coh=T_coh,
+                                         outputfolder='results/example_3/')
+    calculator.calculate()
+    plot_tools.plot_distributions(outputfolder='results/example_3/plots/',
+                                  rca=calculator,
+                                  to_plot='fid')
 
-
-    # Test for communication time
-    folder_4a = 'results/test_4a/'
-    folder_4b = 'results/test_4b/'
-    generate_data_4a(folder_4a)
-    generate_data_4b(folder_4b)
-    load_and_plot_data_4a(folder_4a)
-    load_and_plot_data_4b(folder_4b)
+    sampler = RepeaterChainSampler(n=n,
+                                  pgen=pgen,
+                                  pswap=pswap,
+                                  w0=w0,
+                                  T_coh=T_coh,
+                                  outputfolder='results/example_4/')
+    sampler.sample(sample_size=25000)
+    plot_tools.plot_distributions(outputfolder='results/example_4/plots/',
+                                  rca=sampler,
+                                  to_plot='fid',
+                                  trunc=trunc)
+    # For the Monte Carlo algorithm distillation rounds between the levels can
+    # be added by setting n_dist in the constructor. Communication time for
+    # swap and distillation operations on every level can be included by setting
+    # for example comm_time=[1,2,4,16,32], where comm_time[level] is the
+    # communication time required on level `level`. Example:
+#    sampler = RepeaterChainSampler(n=3,
+#                                  pgen=0.1,
+#                                  pswap=0.5,
+#                                  w0=0.933,
+#                                  T_coh=100,
+#                                  comm_time=[1,2,4,8],
+#                                  n_dist=1,
+#                                  outputfolder='results/example_5/')
+    """
