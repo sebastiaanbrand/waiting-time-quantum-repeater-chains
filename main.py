@@ -5,7 +5,7 @@ import plotting_tools as plot_tools
 if __name__ == '__main__':
     """
     This script computes and plots the probability distribution of waiting time
-    for the SWAP-ONLY repeater chain protocol, using both the numerical
+    for the SWAP-ONLY repeater chain protocol, using both the deterministic
     calculation algorithm, as well as the Monte Carlo algorithm.
 
     Below is also given an example of how the Werner parameters / fidelity can
