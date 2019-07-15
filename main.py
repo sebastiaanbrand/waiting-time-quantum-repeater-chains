@@ -34,7 +34,8 @@ if __name__ == '__main__':
     plot_tools.plot_distributions(outputfolder='results/example_1/plots/',
                                   rca=calculator2,
                                   to_plot='pmf',
-                                  level_selection=[2,3])
+                                  level_selection=[2,3],
+                                  show=True)
 
 
     # The Monte Carlo algorithm works very similarly.
@@ -50,7 +51,8 @@ if __name__ == '__main__':
                                   rca=sampler,
                                   to_plot='pmf',
                                   level_selection=[2,3],
-                                  trunc=trunc)
+                                  trunc=trunc,
+                                  show=True)
 
     # NOTE: uncomment this section for Werner parameter example:
     """

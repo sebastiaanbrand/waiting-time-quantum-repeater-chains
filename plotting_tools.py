@@ -7,7 +7,7 @@ import pathlib
 
 
 def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
-                       trunc=None, format='png', verbose=True):
+                       trunc=None, format='png', verbose=True, show=False):
     """Plots distributions.
 
     Parameters
@@ -28,6 +28,10 @@ def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
         is a RepeaterChainSampler.
     format : string
         Output format (e.g. 'png' or 'pdf').
+    verbose : boolean
+        If set to True prints stuff to console.
+    show : boolean
+        If set to True, shows() the plot before saving it.
     """
     outputpath = _init_plot_file(outputfolder, to_plot, format)
 
@@ -71,9 +75,8 @@ def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
             if(to_plot == 'cdf' and type(rca) == RepeaterChainSampler):
                 n_samps = len(rca.T_samples[level])
                 lower, upper = _ecdf_conf_bands(dist, n_samps, alpha=0.01)
-                plt.fill_between(x=range(trunc+1), y1=upper, y2=lower, color=col, alpha=0.2)
-
-
+                plt.fill_between(x=range(trunc+1), y1=upper, y2=lower,
+                                 color=col, alpha=0.2)
 
 
     # labels and stuff
@@ -85,6 +88,8 @@ def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
         entry = "$N={}$".format(2**level)
         legend.append(entry)
     plt.legend(legend)
+    if(show):
+        plt.show()
     plt.savefig(outputpath, dpi=300, bbox_inches='tight')
     plt.clf()
 
