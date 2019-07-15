@@ -19,7 +19,7 @@ if __name__ == '__main__':
     n     = 3
     trunc = 100
 
-    # Numerical calculation
+    # Deterministic algorithm
     calculator = RepeaterChainCalculator(n=n,
                                          pgen=pgen,
                                          pswap=pswap,

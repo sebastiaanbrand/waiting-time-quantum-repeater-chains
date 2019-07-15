@@ -74,7 +74,7 @@ class RepeaterChainAnalyzer:
 
 
 class RepeaterChainCalculator(RepeaterChainAnalyzer):
-    """Semi-analytical approach to calculating waiting time and fidelities. """
+    """Deterministic algorithm for calculating waiting time and fidelities. """
 
     def __init__(self, n, trunc, pgen, pswap, w0=None, T_coh=None, **kwds):
         """
