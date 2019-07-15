@@ -80,6 +80,7 @@ def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
 
 
     # labels and stuff
+    plt.title(_plot_title(rca))
     plt.xlabel("$t$")
     plt.ylabel(_ylab(to_plot))
     plt.ylim(bottom=0)
@@ -88,9 +89,9 @@ def plot_distributions(outputfolder, rca, to_plot='pmf', level_selection=None,
         entry = "$N={}$".format(2**level)
         legend.append(entry)
     plt.legend(legend)
+    plt.savefig(outputpath, dpi=300, bbox_inches='tight')
     if(show):
         plt.show()
-    plt.savefig(outputpath, dpi=300, bbox_inches='tight')
     plt.clf()
 
 
@@ -222,6 +223,26 @@ def _ecdf_conf_bands(ecdf, n_samps, alpha=0.01):
     upper = np.clip(ecdf + epsilon, 0, 1)
     return lower, upper
 
+def _plot_title(rca):
+    """Plots distributions.
+
+    Parameters
+    ----------
+    rca : RepeaterChainAnalyzer
+        RepeaterChainAnalyzer object of which stuff is being plotted.
+
+    Returns
+    -------
+    string
+        A string containing some information to set as a title for the plot.
+    """
+    algorithm = ''
+    if(type(rca) is RepeaterChainCalculator):
+        algorithm = 'Numerical calculation'
+    elif(type(rca) is RepeaterChainSampler):
+        algorithm = 'Monte Carlo'
+    return "{} - parameters: \n{}".format(algorithm, rca.params)
+
 def _ylab(to_plot):
     """Returns the y-label for the plot given the type of plot.
 
@@ -229,6 +250,11 @@ def _ylab(to_plot):
     ----------
     to_plot : string
         Type of thing to plot. Can be 'pmf', 'cdf', 'fid', or 'wern'.
+
+    Returns
+    -------
+    string
+        The y-label for the plot.
     """
     labels_dict = {
         'pmf'  : "$\\Pr(T_n = t)$",
