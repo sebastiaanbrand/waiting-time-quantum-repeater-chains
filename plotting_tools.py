@@ -238,9 +238,9 @@ def _plot_title(rca):
     """
     algorithm = ''
     if(type(rca) is RepeaterChainCalculator):
-        algorithm = 'Numerical calculation'
+        algorithm = 'Deterministic algorithm'
     elif(type(rca) is RepeaterChainSampler):
-        algorithm = 'Monte Carlo'
+        algorithm = 'Monte Carlo algorithm'
     return "{} - parameters: \n{}".format(algorithm, rca.params)
 
 def _ylab(to_plot):
