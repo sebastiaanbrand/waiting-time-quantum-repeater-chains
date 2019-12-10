@@ -95,7 +95,7 @@ def sum_distributions(pmf1, pmf2):
     else:
         return np.convolve(pmf1, pmf2)
 
-def random_geom_sum(pmf, p):
+def random_geom_sum(pmf, p, low_mem=False):
     """Calculates the distribution of Z = X_1 + X_2 + ... + X_N.
 
     Parameters
@@ -104,6 +104,15 @@ def random_geom_sum(pmf, p):
         Probability distribution of X such that pmf[x] = Pr(X = x).
     p : float
         Probability such that N ~ geom(p), i.e. Pr(N = n) = p(1-p)^{n-1}.
+    low_mem : boolean
+        If set to True this function doesn't store or output the intermediate
+        results `pmf_given_N`, saving a lot of memory. Note that when next to
+        calculating the waiting time, the Werner parameters are calculated as
+        well, this value must be set to False, because the results of
+        `get_pmfs_after_fixed_lengths(pmf)` are required for the Werner
+        parameter calculation.
+        NOTE: refactoring would also allow for a lower memory implementation for
+        the Werner parameter calculation as well.
 
     Returns
     -------
@@ -111,8 +120,12 @@ def random_geom_sum(pmf, p):
         pmf_out[z]       = Pr(sum^N X = z) = Pr(Z = z).
         pmf_given_N[n,z] = Pr(sum^n X = z) = Pr(Z = z | N = n).
     """
-    pmfs_given_N = get_pmfs_after_fixed_lengths(pmf)
-    pmf_final    = get_pmf_after_prob_length(pmfs_given_N, p)
+    if(low_mem):
+        pmf_final = get_pmf_after_prob_length_low_memory(pmf, p)
+        pmfs_given_N = None
+    else:
+        pmfs_given_N = get_pmfs_after_fixed_lengths(pmf)
+        pmf_final    = get_pmf_after_prob_length(pmfs_given_N, p)
     return pmf_final, pmfs_given_N
 
 def get_pmfs_after_fixed_lengths(pmf):
@@ -133,7 +146,7 @@ def get_pmfs_after_fixed_lengths(pmf):
     res    = np.zeros(shape=(trunc,trunc))
     res[1] = pmf
     for k in range(2,trunc):
-        res[k] = sum_distributions(res[k-1], pmf)[:len(pmf)]
+        res[k] = sum_distributions(res[k-1], pmf)[:trunc]
     return res
 
 def get_pmf_after_prob_length(pmfs_fixed_lenghts, p):
@@ -156,4 +169,37 @@ def get_pmf_after_prob_length(pmfs_fixed_lenghts, p):
     pmf_final = np.zeros(trunc)
     for s in range(1, trunc):
         pmf_final = np.add(pmf_final, scipy_geom.pmf(s,p)*pmfs_fixed_lenghts[s])
+    return pmf_final
+
+def get_pmf_after_prob_length_low_memory(pmf, p):
+    """
+    This single function acts as a low memory version of the following two
+    functions combined.
+    - get_pmfs_after_fixed_lengths(pmf)
+    - get_pmf_after_prob_length(pmfs_fixed_lenghts, p)
+    The lower memory usage, O(trunc) instead of O(trunc^2), is achieved by not
+    storing all the intermediate results from `get_pmfs_after_fixed_lengths()`.
+
+    Parameters
+    ----------
+    pmf : 1D numpy array
+        Input pmf (possibly truncated) of some random variable X,
+        such that pmf[x] = Pr(X = x).
+    p : float
+        Probability such that the lenght of this sum ~ geom(p).
+
+    Returns
+    -------
+    1D numpy array
+        Probability mass function `pmf` such that
+        pmf[x] = Pr(sum_{j=1}^N X_j = x), with N ~ geom(p)
+    """
+    trunc = len(pmf)
+    pmf_temp  = np.copy(pmf)
+    pmf_final = np.zeros(trunc)
+    for s in range(1, trunc):
+        if(scipy_geom.pmf(s,p) == 0):
+            break
+        pmf_final = np.add(pmf_final, scipy_geom.pmf(s,p)*pmf_temp)
+        pmf_temp  = sum_distributions(pmf_temp, pmf)[:trunc]
     return pmf_final

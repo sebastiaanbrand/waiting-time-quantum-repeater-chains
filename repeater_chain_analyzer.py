@@ -201,8 +201,12 @@ class RepeaterChainCalculator(RepeaterChainAnalyzer):
         pmf_max = prob_tools.cdf_to_pmf(cdf_max)
 
         # The effect of the swap can be computed via a geometric sum.
+        low_mem = True
+        if(self.params['w0'] is not None):
+            low_mem = False
         pmf_out, pmfs_swaps = prob_tools.random_geom_sum(pmf_max,
-                                                         self.params['pswap'])
+                                                         self.params['pswap'],
+                                                         low_mem)
 
         # Update pmf
         self.pmf[level] = pmf_out
@@ -238,7 +242,9 @@ class RepeaterChainCalculator(RepeaterChainAnalyzer):
         pmf_sum = prob_tools.sum_distributions(pmf_in, pmf_in)[:self.trunc+1]
 
         # The effect of the swap can be computed via a geometric sum.
-        pmf_out, _ = prob_tools.random_geom_sum(pmf_sum, self.params['pswap'])
+        pmf_out, _ = prob_tools.random_geom_sum(pmf_sum, 
+                                                self.params['pswap'],
+                                                low_mem=True)
 
         # Update pmf
         self.pmf_total[level] = pmf_out
